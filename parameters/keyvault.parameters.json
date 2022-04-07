@@ -1,0 +1,88 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "neworexisting": {
+      "value": "new"
+    },
+    "keyVaultName": {
+      "value": "kv-kst-sandbox-weeu-01"
+    },
+    "softDeleteRetentionInDays": {
+      "value": 7
+    },
+    "accessPolicies": {
+      "value": [
+        {
+          "tenantId": "a6b169f1-592b-4329-8f33-8db8903003c7",
+          "objectId": "e2ae389b-af82-4ba7-8a90-386fba3ece72",
+          "permissions": {
+            "keys": [
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore",
+              "Get"
+            ],
+            "secrets": [
+              "Get",
+              "List",
+              "Set",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "certificates": [
+              "Get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore",
+              "ManageContacts",
+              "ManageIssuers",
+              "GetIssuers",
+              "ListIssuers",
+              "SetIssuers",
+              "DeleteIssuers"
+            ]
+          }
+        },
+        {
+          "tenantId": "a6b169f1-592b-4329-8f33-8db8903003c7",
+          "objectId": "f59edf94-5039-4a09-8a55-11da9dd66ea4",
+          "permissions": {
+            "keys": [
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore",
+              "Get"
+            ],
+            "secrets": [
+              "Get",
+              "List",
+              "Set",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

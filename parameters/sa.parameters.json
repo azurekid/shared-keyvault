@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "westeurope"
+    },
+    "storageAccountName": {
+      "value": "sakstsandboxweeu01"
+    },
+    "kind": {
+      "value": "StorageV2"
+    },
+    "sku": {
+      "value": "Standard_LRS"
+    },
+    "accessTier": {
+      "value": "Hot"
+    },
+    "encryption": {
+      "value": {
+        "identity": {},
+        "services": {
+          "file": {
+            "keyType": "Account",
+            "enabled": true
+          },
+          "blob": {
+            "keyType": "Account",
+            "enabled": true
+          }
+        },
+        "keyvaultproperties": {
+          "keyname": "test-keys",
+          "keyvaulturi": "https://kv-kst-sandbox-weeu-01.vault.azure.net/"
+        },
+        "keySource": "Microsoft.Keyvault"
+      }
+    }
+  }
+}

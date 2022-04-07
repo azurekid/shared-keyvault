@@ -1,0 +1,67 @@
+pr: none
+trigger: none
+
+pool: #tooling-sharedtooling-dockeragents
+  vmImage: "ubuntu-latest"
+
+resources:
+  repositories:
+    - repository: ah-tech-shared-keyvault
+      type: github
+      name: RoyalAholdDelhaize/ah-tech-shared-keyvault
+      endpoint: RoyalAholdDelhaize
+      ref: refs/tags/2.2.0
+    - repository: ah-tech-shared-storageaccount
+      type: github
+      name: RoyalAholdDelhaize/ah-tech-shared-storageaccount
+      endpoint: RoyalAholdDelhaize
+      ref: feature/kv_integration
+    - repository: ah-tech-shared-azure-deploy
+      type: github
+      name: RoyalAholdDelhaize/ah-tech-shared-azure-deploy
+      endpoint: RoyalAholdDelhaize
+      ref: release/1.1
+
+stages:
+  - stage: keyvault
+    displayName: Key Vault
+    variables:
+      - template: parameters/pipeline.variables.yml
+    jobs:
+      - job: keyvault
+        displayName: Key Vault
+        variables:
+          moduleFolderVersion: ${{ variables.keyVaultModuleVersion }}
+        steps:
+          - checkout: self
+          - checkout: ah-tech-shared-keyvault
+          - checkout: ah-tech-shared-azure-deploy
+          - template: pipelines/steps.pipeline.yml@ah-tech-shared-keyvault
+            parameters:
+              subscriptionId: ${{ variables.subscriptionId }}
+              resourceGroupName: ${{ variables.resourceGroupName }}
+              location: ${{ variables.location }}
+              serviceConnection: ${{ variables.serviceConnection }}
+              keyVaultName: ${{ variables.keyVaultName }}
+              templateParameterFile: $(System.DefaultWorkingDirectory)/kst-sandbox/parameters/keyvault.parameters.json
+
+  - stage: strage_account
+    displayName: Storage Account
+    dependsOn:
+      - keyvault
+    variables:
+      - template: parameters/pipeline.variables.yml
+    jobs:
+      - job: storageAccount
+        displayName: Storage Account
+        steps:
+          - checkout: self
+          - checkout: ah-tech-shared-storageaccount
+          - checkout: ah-tech-shared-azure-deploy
+          - template: pipelines/steps.pipeline.yml@ah-tech-shared-storageaccount
+            parameters:
+              subscriptionId: ${{ variables.subscriptionId }}
+              resourceGroupName: ${{ variables.resourceGroupName }}
+              location: ${{ variables.location }}
+              serviceConnection: ${{ variables.serviceConnection }}
+              templateParameterFile: $(System.DefaultWorkingDirectory)/kst-sandbox/parameters/sa.parameters.json

@@ -1,0 +1,6 @@
+variables:
+  subscriptionId: 902e454f-cd35-4dc9-ad25-3da6bac0ba35
+  resourceGroupName: rg-kst-sandbox-nonprd-weeu-01
+  serviceConnection: "Ahold Delhaize Subscription sub-ahtech-nonprd-support-cloudsupport01"
+  location: westeurope
+  keyVaultName: kv-kst-sandbox-weeu-01
