@@ -8,5 +8,5 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Check out repository code
-        uses: SecureHats/private@v0.3.0-alpha
+      - name: Validate Sentinel Analytics Rules
+        uses: SecureHats/private@v0.4.0-alpha
