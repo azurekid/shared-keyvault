@@ -9,7 +9,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Validate Sentinel Analytics Rules
-        uses: SecureHats/private@v4.2.4-alpha
+        uses: SecureHats/private@v4.2.5-alpha
         with:
           Debug: true
 #         filesPath: .
