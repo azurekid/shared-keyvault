@@ -11,4 +11,4 @@ jobs:
       - name: Validate Sentinel Analytics Rules
         uses: SecureHats/private@v4.12.3-alpha
         with:
-          path: = "templates"
+          path: "templates"
