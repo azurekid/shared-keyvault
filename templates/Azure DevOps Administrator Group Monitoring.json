@@ -30,8 +30,8 @@
                     "Persistence"
                 ],
                 "techniques": [
-"T1197"
-],
+                    "T1547.015"
+                ],
                 "alertRuleTemplateName": null,
                 "incidentConfiguration": {
                     "createIncident": true,
