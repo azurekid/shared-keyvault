@@ -28,7 +28,9 @@
                 "tactics": [
                     "Persistence"
                 ],
-                "techniques": [],
+                "techniques": [
+                    "T1547"
+                ],
                 "alertRuleTemplateName": null,
                 "incidentConfiguration": {
                     "createIncident": true,
