@@ -26,8 +26,7 @@
                 "suppressionDuration": "PT5H",
                 "suppressionEnabled": false,
                 "tactics": [
-                    "Execution",
-                    "DefenseEvasion"
+                    "Execution"
                 ],
                 "techniques": [
                     "T1204.001"
