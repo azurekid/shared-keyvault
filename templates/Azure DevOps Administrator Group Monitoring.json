@@ -13,7 +13,7 @@
             "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
             "kind": "Scheduled",
             "apiVersion": "2021-10-01-preview",
-            //"enabled": false,
+            "enabled": false,
             "properties": {
                 "displayName": "Azure DevOps Administrator Group Monitoring",
                 "description": "This detection monitors for additions to projects or project collection administration groups in an Azure DevOps Organization.",
@@ -29,7 +29,9 @@
                 "tactics": [
                     "Persistence"
                 ],
-                "techniques": [],
+                "techniques": [
+"T1197"
+],
                 "alertRuleTemplateName": null,
                 "incidentConfiguration": {
                     "createIncident": true,
