@@ -4,11 +4,11 @@ on: push
 jobs:
   pester-test:
     name: Validation
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Validate Sentinel Analytics Rules
-        uses: SecureHats/private@v0.1.14-beta
-        with:
-          filesPath: templates
+        uses: SecureHats/private@v0.1.15-beta
+#         with:
+#           filesPath: templates
