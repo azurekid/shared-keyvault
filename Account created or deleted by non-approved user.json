@@ -1,0 +1,81 @@
+{
+  "ruleProperties": {
+    "queryFrequency": "PT5M",
+    "queryPeriod": "PT5M",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "severity": "Medium",
+    "query": "// Add approved user principal names to the list below to search for their account creation/deletion activity\n// ex: dynamic([\"UPN1\", \"upn123\"])\nlet approved_users = dynamic([]);\nAuditLogs\n| where OperationName == \"Add user\" or OperationName == \"Delete user\"\n| where Result == \"success\"\n| extend InitiatingUser = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)\n| where InitiatingUser !in (approved_users)\n| project-reorder TimeGenerated, ResourceId, OperationName, InitiatingUser, TargetResources\n| extend AccountCustomEntity = InitiatingUser, IPCustomEntity = tostring(parse_json(tostring(InitiatedBy.user)).ipAddress)",
+    "suppressionDuration": "PT5H",
+    "suppressionEnabled": false,
+    "incidentConfiguration": {
+      "createIncident": true,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT5H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "entityMappings": [
+      {
+        "entityType": "Account",
+        "fieldMappings": [
+          {
+            "identifier": "FullName",
+            "columnName": "AccountCustomEntity"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "IPCustomEntity"
+          }
+        ]
+      }
+    ],
+    "tactics": [
+      "Persistence"
+    ],
+    "techniques": ["T1136"],
+    "displayName": "Account created or deleted by non-approved user",
+    "enabled": true,
+    "description": "Identifies accounts that were created or deleted by a defined list of non-approved user principal names. Add to this list before running the query for accurate results.\nRef : https://docs.microsoft.com/azure/active-directory/fundamentals/security-operations-user-accounts"
+  },
+  "nextEngine": {
+    "alertSource":"Microsoft",
+    "alertSourceInformation":"Microsoft Template",
+    "alertRuleTemplateName": "6d63efa6-7c25-4bd4-a486-aa6bf50fde8a",
+    "templateVersion": "1.0.0",
+    "investigation": "Verify if the IP address is commonly used.\n Verifiy if the failed sign-in where followed by a successful one.\nVerify if the user used MFA.\n Verifiy if the device details or user agent is commonly used by the user.\n Verify if the location or ASN is commonly used by the user.\n Verify that the action is expected.\n If it is expected behavior then add the adding account to the trusted list.",
+    "dateCreated": "2022-02-23",
+    "dateUpdated": "",
+    "id": "a7530ed3-5be9-42ac-bff0-d3f57be00138",
+    "playbooks": "",
+    "remediation": "If it is not expected behavior, verify it with the customer.\n If the customer agrees that it is not expected behavior, reset both creating and subject account and revoke their tokens.",
+    "cve": "",
+    "zeroDay": false,
+    "version": "1.0.0",
+    "tableNameCl": "",
+    "additionalSteps": "",
+    "kind": "Scheduled",
+    "shareWithCommunity": false,
+    "watchlist": "",
+    "number": "003",
+    "workItem": "985"
+  },
+  "requiredDataConnectors": {
+    "dataTypes": "",
+    "required": "",
+    "connectorId": ""
+  }
+}
