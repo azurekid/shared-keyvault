@@ -3,7 +3,7 @@ on: push
 
 jobs:
   pester-test:
-    name: Validation
+    name: Validate Detections
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
