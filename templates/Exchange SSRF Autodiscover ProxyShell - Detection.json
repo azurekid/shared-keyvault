@@ -29,7 +29,7 @@
                     "InitialAccess"
                 ],
                 "techniques": [
-                    "T1190"
+                    "T1566.001"
                 ],
                 "alertRuleTemplateName": "968358d6-6af8-49bb-aaa4-187b3067fb95",
                 "incidentConfiguration": {
