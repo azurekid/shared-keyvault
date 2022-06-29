@@ -14,23 +14,23 @@
             "kind": "Scheduled",
             "apiVersion": "2021-10-01-preview",
             "properties": {
-                "displayName": "Azure DevOps Administrator Group Monitoring",
-                "description": "This detection monitors for additions to projects or project collection administration groups in an Azure DevOps Organization.",
-                "severity": "Medium",
-                "enabled": false,
-                "query": "// Change to true to monitor for Project Administrator adds to *any* project\nlet MonitorAllProjects = false;\n// If MonitorAllProjects is false, trigger only on Project Administrator add for the following projects\nlet ProjectsToMonitor = dynamic(['<project_X>','<project_Y>']);\nAzureDevOpsAuditing\n| where Area == \"Group\" and OperationName == \"Group.UpdateGroupMembership.Add\"\n| where Details has 'Administrators'\n| where Details has \"was added as a member of group\" and (Details endswith '\\\\Project Administrators' or Details endswith '\\\\Project Collection Administrators')\n| parse Details with AddedIdentity ' was added as a member of group [' EntityName ']\\\\' GroupName\n| extend Level = iif(GroupName == 'Project Collection Administrators', 'Organization', 'Project'), AddedIdentityId = Data.MemberId\n| extend Severity = iif(Level == 'Organization', 'High', 'Medium'), AlertDetails = strcat('At ', TimeGenerated, ' UTC ', ActorUPN, '/', ActorDisplayName, ' added ', AddedIdentity, ' to the ', EntityName, ' ', Level)\n| where MonitorAllProjects == true or EntityName in (ProjectsToMonitor) or Level == 'Organization'\n| project TimeGenerated, Severity, Adder = ActorUPN, AddedIdentity, AddedIdentityId, AlertDetails, Level, EntityName, GroupName, ActorAuthType = AuthenticationMechanism, \n  ActorIpAddress = IpAddress, ActorUserAgent = UserAgent, RawDetails = Details\n| extend timestamp = TimeGenerated, AccountCustomEntity = Adder, IPCustomEntity = ActorIpAddress",
-                "queryFrequency": "P1D",
-                "queryPeriod": "P14D",
-                "triggerOperator": "GreaterThan",
-                "triggerThreshold": 0,
-                "suppressionDuration": "P1D",
-                "suppressionEnabled": true,
-                "tactics": [
-                    "Persistence"
-                ],
-                "techniques": [
-                    "T1543"
-                ],
+                {
+        "severity": "Medium",
+        "query": "AuditLogs\n| where LoggedByService =~ \"PIM\"\n| where Category =~ \"RoleManagement\"\n| where ActivityDisplayName has \"Disable PIM Alert\"\n| extend IpAddress = case(\n  isnotempty(tostring(parse_json(tostring(InitiatedBy.user)).ipAddress)) and tostring(parse_json(tostring(InitiatedBy.user)).ipAddress) != 'null', tostring(parse_json(tostring(InitiatedBy.user)).ipAddress), \n  isnotempty(tostring(parse_json(tostring(InitiatedBy.app)).ipAddress)) and tostring(parse_json(tostring(InitiatedBy.app)).ipAddress) != 'null', tostring(parse_json(tostring(InitiatedBy.app)).ipAddress),\n  'Not Available')\n| extend InitiatedBy = iff(isnotempty(tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)), \n  tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName), tostring(parse_json(tostring(InitiatedBy.app)).displayName)), UserRoles = tostring(parse_json(tostring(InitiatedBy.user)).ipAddress)\n| project InitiatedBy, ActivityDateTime, ActivityDisplayName, IpAddress, AADOperationType, AADTenantId, ResourceId, CorrelationId, Identity\n| extend timestamp = ActivityDateTime, IPCustomEntity = IpAddress, AccountCustomEntity = tolower(InitiatedBy), ResourceCustomEntity = ResourceId",
+        "queryFrequency": "P1D",
+        "queryPeriod": "P1D",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "displayName": "[#{customername}#] [UC1] Detect PIM Alert Disabling activity",
+        "enabled": true,
+        "description": "Privileged Identity Management (PIM) generates alerts when there is suspicious or unsafe activity in Azure Active Directory (Azure AD) organization. \nThis query will help detect attackers attempts to disable in product PIM alerts which are associated with Azure MFA requirements and could indicate activation of privileged access",
+        "lastUpdatedDateUTC": "2021-10-19T00:00:00Z",
+        "createdDateUTC": "2021-09-30T00:00:00Z",
+        "status": "Available",
+        "kind": "Scheduled",
+        "tactics":["Persistence", "PrivilegeEscalation"],
+        "Techniques":["T1548","T1098","T1078", "T0890"]
+      },
                 "alertRuleTemplateName": null,
                 "incidentConfiguration": {
                     "createIncident": true,
@@ -40,8 +40,6 @@
                         "lookbackDuration": "PT1H",
                         "matchingMethod": "Selected",
                         "groupByEntities": [
-                            "Account",
-                            "IP"
                         ],
                         "groupByAlertDetails": [
                             "Severity"
